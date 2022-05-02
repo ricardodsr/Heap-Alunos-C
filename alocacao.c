@@ -3,7 +3,7 @@
 
 int printColocados (Colocado lic[], int loc[]) {
    int i,j;
-   //Colocado *aux;
+   
    
    for (i=0; i<NUM_UCEs; i++) {
       printf("[Codigo da UCE: %d ] \n",i);
