@@ -17,9 +17,7 @@ void menu() {
 }
 
 void quit() {
-   printf("\nPrograma elaborado por:\n");
-   printf("\tLuís Horta Nova\n\tTiago Costa\n\tAndré Vilas Boas Costa nº 41037\n");
-   printf("2008 @ UM - Algoritmos e Complexidade - LCC\n\n");
+   printf("");
 }
 
 int main (int args, char **argv) {
