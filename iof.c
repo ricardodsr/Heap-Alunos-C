@@ -6,69 +6,50 @@ void flushSTR (char s[]) {
    for (i=0; i<(j-1); s[i++]=' ');
 }
 
-int readAlunos (HeapAlunos *heapalunos, const char filepath[]) {
+int readAlunos(HeapAlunos *heapalunos, const char filepath[]) {
+    FILE *f;
+    char s[4*STR]; // Increase buffer size
+    Aluno a;
 
-   FILE *f;
-   char s[3*STR]; // tamanho aceitável
-   char *p = NULL;
-   Aluno a;
+    f = fopen(filepath, "r");
 
-   f = fopen (filepath,"r");
-  
-   if (!f) return 0;
+    if (!f) return 0;
 
-   while (fgets(s,3*STR,f) != NULL) 
-   {
-      p = strtok(s,","); 
-      a.id = (int)atoi(p);
-      p = strtok(NULL,","); 
-      strcpy(a.nome,p);
-      p = strtok(NULL,","); 
-      strcpy(a.univ,p);
-      p = strtok(NULL,","); 
-      strcpy(a.curso,p);
-      p = strtok(NULL,","); 
-      a.media = (float)atof(p);
-      p = strtok(NULL,","); 
-      a.tipo = (char)(*p);
-      p = strtok(NULL,",");
-      a.ano_pc = (int)atoi(p);
-      a.pref = NULL;
-      a.n_cand = 0;
-      flushSTR(s);
-      if (insert_HeapAlunos(heapalunos,a) == 0) return 0;
-   }
-   fclose(f);
-   return 1;
+    while (fgets(s, sizeof(s), f) != NULL) {
+        if (sscanf(s, "%d,%[^,],%[^,],%[^,],%f,%c,%d", &a.id, a.nome, a.univ, a.curso, &a.media, &a.tipo, &a.ano_pc) != 7) {
+            // Handle error in input format
+            return 0;
+        }
+        a.pref = NULL;
+        a.n_cand = 0;
+        flushSTR(s);
+        if (insert_HeapAlunos(heapalunos, a) == 0) return 0;
+    }
+    fclose(f);
+    return 1;
 }
 
-int readUCEs (UCE uces[], const char filepath[]) {
-   FILE *f;
-   char s[3*STR]; // tamanho aceitável
-   char *p = NULL;
-   UCE x;
 
-   f = fopen (filepath,"r");
-  
-   if (!f) return 0;
+int readUCEs(UCE uces[], const char filepath[]) {
+    FILE *f = fopen(filepath, "r");
+    if (!f) return 0;
 
-   while (fgets(s,3*STR,f) != NULL) 
-   {
-      p = strtok(s,","); 
-      x.id = (int)atoi(p);
-      p = strtok(NULL,","); 
-      strcpy(x.desig,p);
-      p = strtok(NULL,","); 
-      x.nvagas = (int)atoi(p);
-      p = strtok(NULL,","); 
-      x.horario = (char)(*p);
-      flushSTR(s);
-      uces[x.id] = x;
-   }
-   fclose(f);
-   return 1;
+    char buffer[3 * STR]; // buffer for each line
+    int id, nvagas;
+    char desig[STR], horario;
+
+    while (fscanf(f, "%d,%[^,],%d,%c", &id, desig, &nvagas, &horario) == 4) {
+        UCE x;
+        x.id = id;
+        strcpy(x.desig, desig);
+        x.nvagas = nvagas;
+        x.horario = horario;
+        uces[x.id] = x;
+    }
+
+    fclose(f);
+    return 1;
 }
-
 void printUCEs (UCE uces[]) {
    int i;
    printf("\n[UCEs DISPONIVEIS]\n");
