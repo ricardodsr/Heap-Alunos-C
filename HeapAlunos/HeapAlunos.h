@@ -1,23 +1,6 @@
 // Max-Heap de Alunos (orientada pela média do aluno)
 #include "tp.h"
 
-#define N 100
-#define STR 30
-
-typedef struct {
-   int BI;
-   char nome[STR];
-   char univ[5]; 
-   char curso[4];
-   float media;
-   char tipo; // (LICENCIADO 'l', ALUNO_DE_LICENCIATURA 'a' ou PROFISSIONAL 'p')
-}Aluno;
-
-typedef struct {
-   int size;
-   Aluno heap[N]; 
-}HeapAlunos;
-
 int init (HeapAlunos *h);
 // Complexidade O(1). Constante, consiste apenas em colocar o tamanho da heap a 0.
 int insert_heap (HeapAlunos *h, Aluno a); 

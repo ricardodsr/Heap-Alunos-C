@@ -60,25 +60,32 @@ int coloca (Aluno *a, Preferencia *p, Colocado lic[],int loc[]){
 int alocacao(HeapAlunos *h, Colocado lic[], int loc[], UCE uce[]){
     int i,j=0;
     Aluno a;
-    Preferencia *x;
 
-    for (i=0;i<=NUM_UCEs; i++){
-       loc[i]=j;
-       j+=uce[i].nvagas;
+    j = 0;
+    for (i = 0; i < NUM_UCEs; i++) {
+       loc[i] = j;
+       j += uce[i].nvagas;
     }
+    loc[NUM_UCEs] = j; // Set the last element to the total number of slots
 
     initlic(lic);
 
-    while(h->size){
-       maior(h,&a);
+    while(h->size > 0){ // Ensure loop terminates correctly
+       maior(h, &a);
        drop_root(h);
 
-       for (i=0,x=a.pref; (x!=NULL) && (i<a.n_cand); x=x->next){
-           if (ha_vagas(x->uce,lic,loc)){
-               coloca(&a,x,lic,loc);
-               i++;
-            }
-        }
+       Preferencia *current_pref = a.pref;
+       while (current_pref != NULL) {
+           // Check if UCE ID is valid before calling ha_vagas
+           if (current_pref->uce >= 0 && current_pref->uce < NUM_UCEs) {
+               if (ha_vagas(current_pref->uce, lic, loc)) {
+                   coloca(&a, current_pref, lic, loc);
+                   // insere_historico_colocacoes(&a, current_pref->uce); // If such a function is needed
+                   break; // Student placed, exit preference loop
+               }
+           }
+           current_pref = current_pref->next;
+       }
     }
     return 1;
  } 
