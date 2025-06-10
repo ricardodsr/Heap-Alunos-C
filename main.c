@@ -17,7 +17,7 @@ void menu() {
 }
 
 void quit() {
-   printf("");
+   printf("Exiting program.\n");
 }
 
 int main (int args, char **argv) {
